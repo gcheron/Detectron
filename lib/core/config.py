@@ -970,7 +970,7 @@ __C.EXPECTED_RESULTS_EMAIL = b''
 
 # Models and proposals referred to by URL are downloaded to a local cache
 # specified by DOWNLOAD_CACHE
-__C.DOWNLOAD_CACHE = b'/tmp/detectron-download-cache'
+__C.DOWNLOAD_CACHE = b'/sequoia/data2/gcheron/detectron/detectron-download-cache'
 
 
 # ---------------------------------------------------------------------------- #

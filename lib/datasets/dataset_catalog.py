@@ -185,5 +185,24 @@ DATASETS = {
             _DATA_DIR + '/VOC2012/annotations/voc_2012_trainval.json',
         DEVKIT_DIR:
             _DATA_DIR + '/VOC2012/VOCdevkit2012'
-    }
+    },
+    'ucf101_train': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_train1_ucf101.json'
+    },
+    'ucf101_test': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_test1_ucf101.json'
+    },
+    'ucf101_debug': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_debug_ucf101.json'
+    },
+
 }
