@@ -1,0 +1,46 @@
+MODEL:
+  TYPE: generalized_rcnn
+  CONV_BODY: FPN.add_fpn_ResNet101_conv5_body
+  NUM_CLASSES: 25
+  FASTER_RCNN: True
+NUM_GPUS: 1
+SOLVER:
+  WEIGHT_DECAY: 0.0001
+  LR_POLICY: steps_with_decay
+  BASE_LR: 0.0025
+  GAMMA: 0.1
+  MAX_ITER: 720000
+  STEPS: [0, 480000, 640000]
+  # Equivalent schedules with...
+  # 8 GPUs:
+  #   BASE_LR: 0.02
+  #   MAX_ITER: 90000
+  #   STEPS: [0, 60000, 80000] 
+FPN:
+  FPN_ON: True
+  MULTILEVEL_ROIS: True
+  MULTILEVEL_RPN: True
+FAST_RCNN:
+  ROI_BOX_HEAD: fast_rcnn_heads.add_roi_2mlp_head
+  ROI_XFORM_METHOD: RoIAlign
+  ROI_XFORM_RESOLUTION: 7
+  ROI_XFORM_SAMPLING_RATIO: 2
+TRAIN:
+  WEIGHTS: /sequoia/data2/gcheron/detectron/detectron-download-cache/36228933/12_2017_baselines/fast_rcnn_R-101-FPN_2x.yaml.09_26_27.jkOUTrrk/output/train/coco_2014_train%3Acoco_2014_valminusminival/generalized_rcnn/model_for_FT.pkl 
+  DATASETS: ('ucf101_train',)
+  #DATASETS: ('ucf101_debug',)
+  SCALES: (800,)
+  MAX_SIZE: 1333
+  BATCH_SIZE_PER_IM: 512
+  RPN_PRE_NMS_TOP_N: 2000  # Per FPN level
+TEST:
+  WEIGHTS: /sequoia/data2/gcheron/detectron/coco/train/ucf101_train/generalized_rcnn/model_iter19999.pkl 
+  #DATASETS: ('ucf101_debug',)
+  DATASETS: ('ucf101_val_keyframes1',)
+  SCALE: 800
+  MAX_SIZE: 1333
+  NMS: 0.5
+  RPN_PRE_NMS_TOP_N: 1000  # Per FPN level
+  RPN_POST_NMS_TOP_N: 1000
+  FORCE_JSON_DATASET_EVAL: True
+OUTPUT_DIR: .
