@@ -128,11 +128,15 @@ def main(args):
             )
 
         # Save detections in matlab format.
-        classes = ['person']
-        boxes_cell = cls_boxes[1]
+        person_mode = False
+        if person_mode:
+            classes = ['person']
+            boxes_cell = cls_boxes[1]
+        else:
+            classes = [-1]
+            boxes_cell = cls_boxes[1:]
         sio.savemat(os.path.join(args.output_dir, '{}.mat'.format(os.path.basename(im_name))), {'classes': classes,
                                                                               'boxes_cell': boxes_cell})
-
 if __name__ == '__main__':
     workspace.GlobalInit(['caffe2', '--caffe2_log_level=0'])
     utils.logging.setup_logging(__name__)
