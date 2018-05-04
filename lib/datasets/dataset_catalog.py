@@ -192,11 +192,29 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/ucf101/detection/instances_train1_ucf101.json'
     },
-    'ucf101_test': {
+    'ucf101_val': {
         IM_DIR:
             _DATA_DIR + '/ucf101/images',
         ANN_FN:
-            _DATA_DIR + '/ucf101/detection/instances_test1_ucf101.json'
+            _DATA_DIR + '/ucf101/detection/instances_val1_ucf101.json'
+    },
+    'ucf101_train_keyframes1': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_train1_ucf101_keyframes1.json'
+    },
+    'ucf101_train_keyframes3': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_train1_ucf101_keyframes3.json'
+    },
+    'ucf101_val_keyframes1': {
+        IM_DIR:
+            _DATA_DIR + '/ucf101/images',
+        ANN_FN:
+            _DATA_DIR + '/ucf101/detection/instances_val1_ucf101_keyframes1.json'
     },
     'ucf101_debug': {
         IM_DIR:
@@ -204,5 +222,22 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/ucf101/detection/instances_debug_ucf101.json'
     },
-
+    'daly_train': {
+        IM_DIR:
+            _DATA_DIR + '/daly/images',
+        ANN_FN:
+            _DATA_DIR + '/daly/instances_train1_daly.json'
+    },
+    'daly_train_keyframes1': {
+        IM_DIR:
+            _DATA_DIR + '/daly/images',
+        ANN_FN:
+            _DATA_DIR + '/daly/instances_train1_daly_keyframes1.json'
+    },
+    'ucf101_val': {
+        IM_DIR:
+            _DATA_DIR + '/daly/images',
+        ANN_FN:
+            _DATA_DIR + '/daly/instances_val1_daly.json'
+    },
 }
