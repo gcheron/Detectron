@@ -23,6 +23,9 @@ class tube_builder():
       self.vidlist = glob.glob(self.detdir + '/*')
       print 'found %d videos' % len(self.vidlist)
 
+      self.shotpath = shotpath
+      self.hasShots = self.shotpath is not None
+
       if not os.path.exists(resdir):
          os.makedirs(resdir)
 
@@ -140,6 +143,11 @@ class tube_builder():
          video_dets[vid] = 1
          vdets = [[] for _ in xrange(self.nclasses)]
 
+         outfile = '%s/%s.pkl' % (self.resdir, vid)
+         if os.path.exists(outfile):
+            print "Found %s" % outfile
+            continue
+
          alldets = glob.glob(self.vidlist[i_v] + '/*.mat')
          alldets.sort()
          nds = len(alldets)
@@ -148,6 +156,12 @@ class tube_builder():
          for f, _d in enumerate(alldets):
             det = sio.loadmat(open(_d))['boxes_cell']
             if det.size > 0:
+               if det.ndim == 3:
+                  # deal with sio "bug"...
+                  print 'convert shape: ', det.shape
+                  assert det.shape == (self.nclasses, 1, 5)
+                  det = det[None, :, :, :]
+                  print '--> to: ', det.shape
                assert det.shape[1] == self.nclasses
             for c in xrange(self.nclasses):
                if det.size > 0 and det[0, c].size > 0:
@@ -156,12 +170,12 @@ class tube_builder():
                   _app = np.zeros((0, 5))
                vdets[c].append(_app)
 
+         if self.hasShots:
+            shots = sio.loadmat(self.shotpath + vid + '.mp4.mat')['shots']
+            shot_starts = shots[:, 0].astype(int)
+            shot_starts[1:] -= 1 # fix offset (except on the first frame)
+
          # link tubelets into tubes
-         outfile = '%s/%s.pkl' % (self.resdir, vid)
-         if os.path.exists(outfile):
-            print "Found %s" % outfile
-            continue
-            
          n_stack_dets = len(vdets[0])
 
          if i_v % 50 == 0:
@@ -173,7 +187,6 @@ class tube_builder():
             cur_tubes = []
 
             i_shot = -1
-            last_of_shot = True
             for i_d in xrange(n_stack_dets):
                frame = i_d + 1
                # get tubelets and NMS
@@ -181,11 +194,21 @@ class tube_builder():
                idx = self.nms_tubelets(tubelets)
                tubelets = tubelets[idx, :]
 
-               if i_d == 0:
+               if self.hasShots:
+                  new_shot = (frame == shot_starts).any()
+                  next_is_new_shot = (frame+1 == shot_starts).any()
+               else:
+                  new_shot = False
+                  next_is_new_shot = False
+
+               if i_d == 0 or new_shot:
                   assert len(cur_tubes) == 0
                   # start tubes
-                  for i in xrange(tubelets.shape[0]):
-                     cur_tubes.append( [(frame, tubelets[i, :])] )
+                  if not next_is_new_shot:
+                     # if new_shot and next_is_new_shot, shot size == 1, just skip init
+                     # --> current 1 frame-shot is discarded
+                     for i in xrange(tubelets.shape[0]):
+                        cur_tubes.append( [(frame, tubelets[i, :])] )
 
                   continue
 
@@ -226,9 +249,13 @@ class tube_builder():
                      idx = valid[_maxsc] 
                      cur_tubes[i_t].append( (frame, tubelets[idx, :]) )
                      tubelets = np.delete(tubelets, idx, axis=0)
-                  else:
+                  elif not next_is_new_shot:
                      if offset >= self.offset_end:
-                        finished.append(i_t) 
+                        finished.append(i_t)
+
+                  if next_is_new_shot:
+                     # terminate all tubes
+                     finished.append(i_t)
 
                # finish tubes
                for i_t in finished[::-1]:
@@ -236,8 +263,9 @@ class tube_builder():
                   del cur_tubes[i_t]
 
                # start new tubes from remaing tubelets
-               for i in xrange(tubelets.shape[0]):
-                  cur_tubes.append( [(frame, tubelets[i, :])] )
+               if not next_is_new_shot:
+                  for i in xrange(tubelets.shape[0]):
+                     cur_tubes.append( [(frame, tubelets[i, :])] )
 
             # add last current tubes to finished ones
             finished_tubes += cur_tubes
@@ -288,31 +316,36 @@ class tube_builder():
 
 if __name__ == '__main__':
    K = 1
-   dataname = 'UCF101' # 'DALY' 'UCF101'
+   dataname = 'DALY' # 'DALY' 'UCF101'
 
    if dataname == 'DALY':
       proot = '/sequoia/data2/gcheron/DALY'
       pref = 'daly'
       nclasses = 10
       shotpath = '/sequoia/data2/gcheron/DALY/daly_shotdet/mat_shots/'
+
+      detpath = '/sequoia/data2/jalayrac/nips2017weakpose/DALY_detectron_allAnn/'
+      respath = '/sequoia/data2/gcheron/DALY/onlinelink_detectron_allAnn/'
+
    elif dataname == 'UCF101':
       proot = '/sequoia/data2/gcheron/UCF101/detection'
       pref = 'ucf101'
       nclasses = 24
       shotpath = None
 
-
-   #detpath = '/sequoia/data1/gcheron/code/detectron//detections/'
-   #respath = '/sequoia/data1/gcheron/code/detectron//detections_linked/'
+      #detpath = '/sequoia/data1/gcheron/code/detectron//detections/'
+      #respath = '/sequoia/data1/gcheron/code/detectron//detections_linked/'
  
-   #detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_allAnn/'
-   #respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_allAnn/'
+      #detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_allAnn/'
+      #respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_allAnn/'
 
-   #detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_1key/'
-   #respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_1key/'
+      #detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_1key/'
+      #respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_1key/'
 
-   detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_3key/'
-   respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_3key/'
+      detpath = '/sequoia/data2/jalayrac/nips2017weakpose/UCF101_detectron_3key/'
+      respath = '/sequoia/data2/gcheron/UCF101/detection/onlinelink_detectron_3key/'
+
+
 
 
 
