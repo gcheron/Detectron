@@ -240,10 +240,4 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/daly/instances_train1_daly_keyframes1.json'
     },
-    'ucf101_val': {
-        IM_DIR:
-            _DATA_DIR + '/daly/images',
-        ANN_FN:
-            _DATA_DIR + '/daly/instances_val1_daly.json'
-    },
 }

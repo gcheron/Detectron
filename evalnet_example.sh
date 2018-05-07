@@ -1,0 +1,1 @@
+python2 tools/test_net.py --cfg configs/myconfigs/e2e_faster_rcnn_R-101-FPN_ucf101_ftFromImageNet.yaml TEST.WEIGHTS /sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train/generalized_rcnn/model_final.pkl NUM_GPUS 1 | tee /sequoia/data2/gcheron/detectron/imagenet/test/ucf101_val_keyframes1/log_iterFINAL.txt

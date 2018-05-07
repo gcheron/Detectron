@@ -21,8 +21,13 @@ pwei="/sequoia/data2/gcheron/detectron/imagenet/train/daly_train_keyframes1/gene
 #vidlist="/sequoia/data2/gcheron/UCF101/detection/OF_vidlist_all.txt"
 #outdir="/sequoia/data2/jalayrac/nips2017weakpose/UCF101_"
 #imdir="/sequoia/data2/gcheron/UCF101/images/"
-#pcfg="configs/myconfigs/e2e_faster_rcnn_R-101-FPN_ucf101_ftFromImageNet.yaml"
-#pwei="/sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train/generalized_rcnn/model_final.pkl"
+##pcfg="configs/myconfigs/e2e_faster_rcnn_R-101-FPN_ucf101_ftFromImageNet.yaml"
+##pwei="/sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train/generalized_rcnn/model_final.pkl"
+##pcfg="configs/myconfigs/e2e_faster_rcnn_R-101-FPN_ucf101_1key_ftFromImageNet.yaml"
+##pwei="/sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train_keyframes1/generalized_rcnn/model_final.pkl"
+#pcfg="configs/myconfigs/e2e_faster_rcnn_R-101-FPN_ucf101_3key_ftFromImageNet.yaml"
+#pwei="/sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train_keyframes3/generalized_rcnn/model_final.pkl"
+
 
 outdir=$outdir$outname
 

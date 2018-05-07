@@ -7,6 +7,9 @@ then
    #detdir=UCF101_detectron_allAnn
 fi
 
+missfromlist=$2
+#missfromlist=/sequoia/data2/gcheron/UCF101/detection/OF_vidlist_all.txt
+
 CHECK_MISSING=1
 
 while true
@@ -42,6 +45,21 @@ do
       fi
    done
    mv .finish_list_tmp finish_list_${detdir}.txt
+
+   if [ ! -z "$missfromlist" ]
+   then
+      while read line
+      do
+         vname=$(echo $line | cut -f1 -d " ")
+         grep -q "$vname" finish_list_${detdir}.txt
+         NOTFOUND=$?
+         if [ $NOTFOUND -eq "1" ]
+         then
+            echo $vname
+         fi
+
+      done < "$missfromlist"
+   fi
 
    if [[ "$CHECK_MISSING" -eq "1" ]]
    then

@@ -39,7 +39,7 @@ TRAIN:
   RPN_PRE_NMS_TOP_N: 2000  # Per FPN level
 TEST:
   WEIGHTS: /sequoia/data2/gcheron/detectron/imagenet/train/ucf101_train_keyframes3/generalized_rcnn/model_iter79999.pkl 
-  DATASETS: ('ucf101_val',)
+  DATASETS: ('ucf101_val_keyframes1',)
   SCALE: 800
   MAX_SIZE: 1333
   NMS: 0.5
