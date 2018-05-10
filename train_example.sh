@@ -1,0 +1,1 @@
+python2 tools/train_net.py --cfg configs/myconfigs/e2e_faster_rcnn_R-101-FPN_daly_ftFromImageNet_extended.yaml OUTPUT_DIR /sequoia/data2/gcheron/detectron/imagenet_extended 2>&1 | tee /sequoia/data2/gcheron/detectron/imagenet_extended/train/daly_train/log.txt
