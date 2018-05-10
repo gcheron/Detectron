@@ -6,6 +6,7 @@ from tube_utils import iou2d
 import os
 import glob
 import scipy.io as sio
+import argparse
 
 class tube_builder():
    def __init__(self, detpath, resdir, nclasses, K, shotpath):
@@ -315,6 +316,14 @@ class tube_builder():
             pickle.dump(res, f)
 
 if __name__ == '__main__':
+
+   parser = argparse.ArgumentParser()
+
+   parser.add_argument('--i_from', type=int, default=-1)
+   parser.add_argument('--i_to', type=int, default=-1)
+
+   args = parser.parse_args()
+
    K = 1
    dataname = 'DALY' # 'DALY' 'UCF101'
 
@@ -324,8 +333,11 @@ if __name__ == '__main__':
       nclasses = 10
       shotpath = '/sequoia/data2/gcheron/DALY/daly_shotdet/mat_shots/'
 
-      detpath = '/sequoia/data2/jalayrac/nips2017weakpose/DALY_detectron_allAnn/'
-      respath = '/sequoia/data2/gcheron/DALY/onlinelink_detectron_allAnn/'
+      #detpath = '/sequoia/data2/jalayrac/nips2017weakpose/DALY_detectron_allAnn/'
+      #respath = '/sequoia/data2/gcheron/DALY/onlinelink_detectron_allAnn/'
+
+      detpath = '/sequoia/data2/jalayrac/nips2017weakpose/DALY_detectron_1key/'
+      respath = '/sequoia/data2/gcheron/DALY/onlinelink_detectron_1key/'
 
    elif dataname == 'UCF101':
       proot = '/sequoia/data2/gcheron/UCF101/detection'
@@ -351,8 +363,4 @@ if __name__ == '__main__':
 
    tb = tube_builder(detpath, respath,
                      nclasses, K, shotpath)
-   tb.build_tubes()
-   #tb.build_tubes(i_from=0, i_to=50)
-   #tb.build_tubes(i_from=51, i_to=100)
-   #tb.build_tubes(i_from=101, i_to=151)
-   #tb.build_tubes(i_from=151, i_to=200)
+   tb.build_tubes(i_from=args.i_from, i_to=args.i_to)
